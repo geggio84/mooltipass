@@ -25,6 +25,7 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
+#include <msp430.h>
 #include <avr/io.h>
 #include <stdint.h>
 
@@ -73,7 +74,7 @@
  *  MINI_KICKSTARTER_SETUP
  *  => mooltipass mini production kickstarter version (8Mb)
 */
-#define MINI_PREPROD_KICKSTARTER_SETUP_HARDENED_CREDENTIAL_MANAGEMENT
+#define MINI_MSP430
 //#define MINI_PREPRODUCTION_SETUP_ACC
 //#define POST_KICKSTARTER_UPDATE_SETUP
 
@@ -210,6 +211,19 @@
     #define FLASH_CHIP_8M
     //#define DATA_STORAGE_EN
     #define HARDWARE_MINI_CLICK_V2
+    #define DISABLE_USB_SET_UID_DEV_PASSWORD_COMMANDS
+    #define KNOCK_SETTINGS_CHANGE_PREVENT_WHEN_CARD_INSERTED
+
+    #define MINI_PREPROD_KICKSTARTER_SETUP
+    #define ENABLE_CREDENTIAL_MANAGEMENT                    // WARNING: requires a new resource bundle.img with additional strings
+    #define REPLACE_FAVORITES_WITH_CREDENTIAL_MANAGEMENT    // replaces favorites selection menu with creds management menu
+    #define MINI_HARDENED_FW
+#elif defined(MINI_MSP430)
+    //#define STACK_DEBUG
+    #define MINI_VERSION
+    #define FLASH_CHIP_8M
+    //#define DATA_STORAGE_EN
+    #define HARDWARE_MINI_MSP430
     #define DISABLE_USB_SET_UID_DEV_PASSWORD_COMMANDS
     #define KNOCK_SETTINGS_CHANGE_PREVENT_WHEN_CARD_INSERTED
 
@@ -610,6 +624,100 @@ typedef int8_t RET_TYPE;
         #define PORT_LED_4          PORTF
         #define DDR_LED_4           DDRF
     #endif
+#endif
+#if defined(HARDWARE_MINI_MSP430)
+	// SPIs
+	#define SPI_SMARTCARD
+	#define SPI_FLASH
+	#define SPI_OLED
+	#define DDR_SPI_NATIVE
+	#define PORT_SPI_NATIVE
+	#define SS_SPI_NATIVE
+	#define SCK_SPI_NATIVE
+	#define MOSI_SPI_NATIVE
+	#define MISO_SPI_NATIVE
+	#define DDR_SPI_USART
+	#define PORT_SPI_USART
+	#define SCK_SPI_USART
+	#define MOSI_SPI_USART
+	#define MISO_SPI_USART
+	// Slave Select Flash
+	#define PORTID_FLASH_nS
+	#define PORT_FLASH_nS
+	#define DDR_FLASH_nS
+	// Detect smart card
+	#define PORTID_SC_DET
+	#define PORT_SC_DET
+	#define DDR_SC_DET
+	#define PIN_SC_DET
+	// Smart card program
+	#define PORTID_SC_PGM
+	#define PORT_SC_PGM
+	#define DDR_SC_PGM
+	// Smart card power enable
+	#define PORTID_SC_POW
+	#define PORT_SC_POW
+	#define DDR_SC_POW
+	// Smart card reset
+	#define PORTID_SC_RST
+	#define PORT_SC_RST
+	#define DDR_SC_RST
+	// OLED Data / Command
+	#define PORTID_OLED_DnC
+	#define PORT_OLED_DnC
+	#define DDR_OLED_DnC
+	// OLED Slave Select
+	#define PORTID_OLED_SS
+	#define PORT_OLED_SS
+	#define DDR_OLED_SS
+	// OLED reset
+	#define PORTID_OLED_nR
+	#define PORT_OLED_nR
+	#define DDR_OLED_nR
+	// Power enable to the OLED
+	#define PORTID_OLED_POW
+	#define PORT_OLED_POW
+	#define DDR_OLED_POW
+
+	// Click wheel
+	#define PORTID_WHEEL_A
+	#define PIN_WHEEL_A
+	#define PORTID_WHEEL_B
+	#define PIN_WHEEL_B
+	#define PORT_WHEEL_A
+	#define PORT_WHEEL_B
+	#define DDR_WHEEL_A
+	#define DDR_WHEEL_B
+	#define PORTID_CLICK
+	#define PORT_CLICK
+	#define DDR_CLICK
+	#define PIN_CLICK
+
+	// Accelerometer
+	#define PORTID_ACC_INT
+	#define PORT_ACC_INT
+	#define DDR_ACC_INT
+	#define PIN_ACC_INT
+	#define PORTID_ACC_SS
+	#define PORT_ACC_SS
+	#define DDR_ACC_SS
+
+	// LEDs
+	#define PORTID_LED_MOS
+	#define PORT_LED_MOS
+	#define DDR_LED_MOS
+	#define PORTID_LED_1
+	#define PORT_LED_1
+	#define DDR_LED_1
+	#define PORTID_LED_2
+	#define PORT_LED_2
+	#define DDR_LED_2
+	#define PORTID_LED_3
+	#define PORT_LED_3
+	#define DDR_LED_3
+	#define PORTID_LED_4
+	#define PORT_LED_4
+	#define DDR_LED_4
 #endif
 
 #endif /* DEFINES_H_ */
