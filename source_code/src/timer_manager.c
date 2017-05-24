@@ -141,4 +141,4 @@ void timerBased130MsDelay(void)
 void timerBased500MsDelay(void)
 {
     timerBasedDelayMs(500);
-} 
+}
