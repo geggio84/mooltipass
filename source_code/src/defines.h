@@ -630,94 +630,94 @@ typedef int8_t RET_TYPE;
 	#define SPI_SMARTCARD
 	#define SPI_FLASH
 	#define SPI_OLED
-	#define DDR_SPI_NATIVE
+	#define DDR_SPI_NATIVE			P1DIR
 	#define PORT_SPI_NATIVE
 	#define SS_SPI_NATIVE
 	#define SCK_SPI_NATIVE
 	#define MOSI_SPI_NATIVE
 	#define MISO_SPI_NATIVE
-	#define DDR_SPI_USART
+	#define DDR_SPI_USART			P1DIR
 	#define PORT_SPI_USART
 	#define SCK_SPI_USART
 	#define MOSI_SPI_USART
 	#define MISO_SPI_USART
 	// Slave Select Flash
-	#define PORTID_FLASH_nS
-	#define PORT_FLASH_nS
-	#define DDR_FLASH_nS
+	#define PORTID_FLASH_nS			BIT0
+	#define PORT_FLASH_nS			P1OUT
+	#define DDR_FLASH_nS			P1DIR
 	// Detect smart card
-	#define PORTID_SC_DET
-	#define PORT_SC_DET
-	#define DDR_SC_DET
-	#define PIN_SC_DET
+	#define PORTID_SC_DET			BIT0
+	#define PORT_SC_DET				P1REN
+	#define DDR_SC_DET				P1DIR
+	#define PIN_SC_DET				P1IN
 	// Smart card program
-	#define PORTID_SC_PGM
-	#define PORT_SC_PGM
-	#define DDR_SC_PGM
+	#define PORTID_SC_PGM			BIT0
+	#define PORT_SC_PGM				P1OUT
+	#define DDR_SC_PGM				P1DIR
 	// Smart card power enable
-	#define PORTID_SC_POW
-	#define PORT_SC_POW
-	#define DDR_SC_POW
+	#define PORTID_SC_POW			BIT0
+	#define PORT_SC_POW				P1OUT
+	#define DDR_SC_POW				P1DIR
 	// Smart card reset
-	#define PORTID_SC_RST
-	#define PORT_SC_RST
-	#define DDR_SC_RST
+	#define PORTID_SC_RST			BIT0
+	#define PORT_SC_RST				P1OUT
+	#define DDR_SC_RST				P1DIR
 	// OLED Data / Command
-	#define PORTID_OLED_DnC
-	#define PORT_OLED_DnC
-	#define DDR_OLED_DnC
+	#define PORTID_OLED_DnC			BIT0
+	#define PORT_OLED_DnC			P1OUT
+	#define DDR_OLED_DnC			P1DIR
 	// OLED Slave Select
-	#define PORTID_OLED_SS
-	#define PORT_OLED_SS
-	#define DDR_OLED_SS
+	#define PORTID_OLED_SS			BIT0
+	#define PORT_OLED_SS			P1OUT
+	#define DDR_OLED_SS				P1DIR
 	// OLED reset
-	#define PORTID_OLED_nR
-	#define PORT_OLED_nR
-	#define DDR_OLED_nR
+	#define PORTID_OLED_nR			BIT0
+	#define PORT_OLED_nR			P1OUT
+	#define DDR_OLED_nR				P1DIR
 	// Power enable to the OLED
-	#define PORTID_OLED_POW
-	#define PORT_OLED_POW
-	#define DDR_OLED_POW
+	#define PORTID_OLED_POW			BIT0
+	#define PORT_OLED_POW			P1OUT
+	#define DDR_OLED_POW			P1DIR
 
 	// Click wheel
-	#define PORTID_WHEEL_A
-	#define PIN_WHEEL_A
-	#define PORTID_WHEEL_B
-	#define PIN_WHEEL_B
-	#define PORT_WHEEL_A
-	#define PORT_WHEEL_B
-	#define DDR_WHEEL_A
-	#define DDR_WHEEL_B
-	#define PORTID_CLICK
-	#define PORT_CLICK
-	#define DDR_CLICK
-	#define PIN_CLICK
+	#define PORTID_WHEEL_A			BIT0
+	#define PIN_WHEEL_A				P1IN
+	#define PORTID_WHEEL_B			BIT0
+	#define PIN_WHEEL_B				P1IN
+	#define PORT_WHEEL_A			P1REN
+	#define PORT_WHEEL_B			P1REN
+	#define DDR_WHEEL_A				P1DIR
+	#define DDR_WHEEL_B				P1DIR
+	#define PORTID_CLICK			BIT0
+	#define PORT_CLICK				P1REN
+	#define DDR_CLICK				P1DIR
+	#define PIN_CLICK				P1IN
 
 	// Accelerometer
-	#define PORTID_ACC_INT
+	#define PORTID_ACC_INT			BIT0
 	#define PORT_ACC_INT
-	#define DDR_ACC_INT
-	#define PIN_ACC_INT
-	#define PORTID_ACC_SS
-	#define PORT_ACC_SS
-	#define DDR_ACC_SS
+	#define DDR_ACC_INT				P1DIR
+	#define PIN_ACC_INT				P1IN
+	#define PORTID_ACC_SS			BIT0
+	#define PORT_ACC_SS				P1OUT
+	#define DDR_ACC_SS				P1DIR
 
 	// LEDs
-	#define PORTID_LED_MOS
-	#define PORT_LED_MOS
-	#define DDR_LED_MOS
-	#define PORTID_LED_1
-	#define PORT_LED_1
-	#define DDR_LED_1
-	#define PORTID_LED_2
-	#define PORT_LED_2
-	#define DDR_LED_2
-	#define PORTID_LED_3
-	#define PORT_LED_3
-	#define DDR_LED_3
-	#define PORTID_LED_4
-	#define PORT_LED_4
-	#define DDR_LED_4
+	#define PORTID_LED_MOS			BIT0
+	#define PORT_LED_MOS			P1OUT
+	#define DDR_LED_MOS				P1DIR
+	#define PORTID_LED_1			BIT0
+	#define PORT_LED_1				P1OUT
+	#define DDR_LED_1				P1DIR
+	#define PORTID_LED_2			BIT0
+	#define PORT_LED_2				P1OUT
+	#define DDR_LED_2				P1DIR
+	#define PORTID_LED_3			BIT0
+	#define PORT_LED_3				P1OUT
+	#define DDR_LED_3				P1DIR
+	#define PORTID_LED_4			BIT0
+	#define PORT_LED_4				P1OUT
+	#define DDR_LED_4				P1DIR
 #endif
 
 #endif /* DEFINES_H_ */
