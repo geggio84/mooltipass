@@ -36,10 +36,8 @@
 
 #include <inttypes.h>
 
-#if !defined(__DOXYGEN__)
 static __inline__ void _delay_loop_1(uint8_t __count) __attribute__((__always_inline__));
 static __inline__ void _delay_loop_2(uint16_t __count) __attribute__((__always_inline__));
-#endif
 
 /** \file */
 /** \defgroup util_delay_basic <util/delay_basic.h>: Basic busy-wait delay loops

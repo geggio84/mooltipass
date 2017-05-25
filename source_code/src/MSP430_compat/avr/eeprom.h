@@ -37,7 +37,7 @@
 
 #include <avr/io.h>
 
-#if !E2END && !defined(__DOXYGEN__) && !defined(__COMPILING_AVR_LIBC__)
+#if !E2END && !defined(__COMPILING_AVR_LIBC__)
 # warning "Device does not have EEPROM available."
 #else
 
@@ -93,11 +93,7 @@ extern "C" {
 #endif
 
 #ifndef	__ATTR_PURE__
-# ifdef	 __DOXYGEN__
-#  define __ATTR_PURE__
-# else
 #  define __ATTR_PURE__  __attribute__((__pure__))
-# endif
 #endif
 
 /** \def EEMEM
@@ -110,9 +106,7 @@ extern "C" {
     \ingroup avr_eeprom
     \returns 1 if EEPROM is ready for a new read/write operation, 0 if not.
  */
-#if	defined (__DOXYGEN__)
-# define eeprom_is_ready()
-#elif	defined (__AVR_XMEGA__) && __AVR_XMEGA__
+#if	defined (__AVR_XMEGA__) && __AVR_XMEGA__
 # define eeprom_is_ready()	bit_is_clear (NVM_STATUS, NVM_NVMBUSY_bp)
 #elif	defined (DEECR)
 # define eeprom_is_ready()	bit_is_clear (DEECR, BSY)
@@ -242,5 +236,5 @@ void eeprom_update_block (const void *__src, void *__dst, size_t __n);
 #endif
 
 #endif	/* !__ASSEMBLER__ */
-#endif	/* E2END || defined(__DOXYGEN__) || defined(__COMPILING_AVR_LIBC__) */
+#endif	/* E2END || defined(__COMPILING_AVR_LIBC__) */
 #endif	/* !_AVR_EEPROM_H_ */

@@ -37,10 +37,10 @@
 
 #include <avr/io.h>
 
-#if !defined(__DOXYGEN__) && !defined(__STRINGIFY)
+#if !defined(__STRINGIFY)
 /* Auxiliary macro for ISR_ALIAS(). */
 #define __STRINGIFY(x) #x
-#endif /* !defined(__DOXYGEN__) */
+#endif
 
 /** 
 \file 
@@ -63,7 +63,6 @@
     respect to compiler optimizations.
 */
 
-#if defined(__DOXYGEN__)
 /** \def sei()
     \ingroup avr_interrupts
 
@@ -76,12 +75,8 @@
     consider using the macros from <util/atomic.h>, rather than
     implementing them manually with cli() and sei().
 */
-#define sei()
-#else  /* !DOXYGEN */
 # define sei()  __asm__ __volatile__ ("sei" ::: "memory")
-#endif /* DOXYGEN */
 
-#if defined(__DOXYGEN__)
 /** \def cli()
     \ingroup avr_interrupts
 
@@ -94,16 +89,11 @@
     consider using the macros from <util/atomic.h>, rather than
     implementing them manually with cli() and sei().
 */
-#define cli()
-#else  /* !DOXYGEN */
 # define cli()  __asm__ __volatile__ ("cli" ::: "memory")
-#endif /* DOXYGEN */
-
 
 /** \name Macros for writing interrupt handler functions */
 
 
-#if defined(__DOXYGEN__)
 /** \def ISR(vector [, attributes])
     \ingroup avr_interrupts
 
@@ -122,9 +112,6 @@
     \c vector must be one of the interrupt vector names that are
     valid for the particular MCU type.
 */
-#  define ISR(vector, [attributes])
-#else  /* real code */
-
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define __INTR_ATTRS used, externally_visible
 #else /* GCC < 4.1 */
@@ -141,9 +128,6 @@
     void vector (void)
 #endif
 
-#endif /* DOXYGEN */
-
-#if defined(__DOXYGEN__)
 /** \def SIGNAL(vector)
     \ingroup avr_interrupts
 
@@ -153,9 +137,6 @@
     This is the same as the ISR macro without optional attributes.
     \deprecated Do not use SIGNAL() in new code. Use ISR() instead.
 */
-#  define SIGNAL(vector)
-#else  /* real code */
-
 #ifdef __cplusplus
 #  define SIGNAL(vector)					\
     extern "C" void vector(void) __attribute__ ((signal, __INTR_ATTRS));	\
@@ -166,9 +147,6 @@
     void vector (void)
 #endif
 
-#endif /* DOXYGEN */
-
-#if defined(__DOXYGEN__)
 /** \def EMPTY_INTERRUPT(vector)
     \ingroup avr_interrupts
 
@@ -177,9 +155,6 @@
     define a function body as this will define it for you.
     Example:
     \code EMPTY_INTERRUPT(ADC_vect);\endcode */
-#  define EMPTY_INTERRUPT(vector)
-#else  /* real code */
-
 #ifdef __cplusplus
 #  define EMPTY_INTERRUPT(vector)                \
     extern "C" void vector(void) __attribute__ ((signal,naked,__INTR_ATTRS));    \
@@ -190,9 +165,6 @@
     void vector (void) { __asm__ __volatile__ ("reti" ::); }
 #endif
 
-#endif /* DOXYGEN */
-
-#if defined(__DOXYGEN__)
 /** \def ISR_ALIAS(vector, target_vector)
     \ingroup avr_interrupts
 
@@ -221,9 +193,6 @@
     \endcode 
     
 */
-#  define ISR_ALIAS(vector, target_vector)
-#else /* real code */
-
 #ifdef __cplusplus
 #  if defined(__AVR_MEGA__) && __AVR_MEGA__
 #    define ISR_ALIAS(vector, tgt) extern "C" void vector (void) \
@@ -246,9 +215,6 @@
 #  endif  /* __AVR_MEGA__ */
 #endif	/* __cplusplus */
 
-#endif /* DOXYGEN */
-
-#if defined(__DOXYGEN__)
 /** \def reti()
     \ingroup avr_interrupts
 
@@ -259,12 +225,8 @@
     This macro actually compiles into a single line of assembly, so there is
     no function call overhead.
 */
-#  define reti()
-#else  /* !DOXYGEN */
 #  define reti()  __asm__ __volatile__ ("reti" ::)
-#endif /* DOXYGEN */
 
-#if defined(__DOXYGEN__)
 /** \def BADISR_vect
     \ingroup avr_interrupts
 
@@ -275,14 +237,10 @@
     may be used along with the ISR() macro to create a catch-all for
     undefined but used ISRs for debugging purposes.
 */
-#  define BADISR_vect
-#else  /* !DOXYGEN */
 #  define BADISR_vect __vector_default
-#endif /* DOXYGEN */
 
 /** \name ISR attributes */
 
-#if defined(__DOXYGEN__)
 /** \def ISR_BLOCK
     \ingroup avr_interrupts
 
@@ -292,7 +250,6 @@
 
     Use this attribute in the attributes parameter of the ISR macro.
 */
-#  define ISR_BLOCK
 
 /** \def ISR_NOBLOCK
     \ingroup avr_interrupts
@@ -309,7 +266,6 @@
 
     Use this attribute in the attributes parameter of the ISR macro.
 */
-#  define ISR_NOBLOCK
 
 /** \def ISR_NAKED
     \ingroup avr_interrupts
@@ -321,7 +277,6 @@
 
     Use this attribute in the attributes parameter of the ISR macro.
 */
-#  define ISR_NAKED
 
 /** \def ISR_ALIASOF(target_vector)
     \ingroup avr_interrupts
@@ -331,13 +286,10 @@
 
     Use this attribute in the attributes parameter of the ISR macro.
 */
-#  define ISR_ALIASOF(target_vector)
-#else  /* !DOXYGEN */
 #  define ISR_BLOCK
 #  define ISR_NOBLOCK    __attribute__((interrupt))
 #  define ISR_NAKED      __attribute__((naked))
 #  define ISR_ALIASOF(v) __attribute__((alias(__STRINGIFY(v))))
-#endif /* DOXYGEN */
 
 /* \@} */
 
