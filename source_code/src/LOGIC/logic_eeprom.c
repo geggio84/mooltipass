@@ -83,7 +83,9 @@ static const uint8_t eeprom_param_init[] __attribute__((__progmem__)) =
 */
 void mooltipassParametersInit(void)
 {
-    for (uint8_t i = 0; i < sizeof(eeprom_param_init); i++)
+	uint8_t i;
+
+    for (i = 0; i < sizeof(eeprom_param_init); i++)
     {
         setMooltipassParameterInEeprom(FIRST_USER_PARAM + i, pgm_read_byte(&eeprom_param_init[i]));
     }   
@@ -94,8 +96,10 @@ void mooltipassParametersInit(void)
 */
 void firstTimeUserHandlingInit(void)
 {
+	uint8_t i;
+
     // Fill user IDs with 0xFF to indicate empty slots
-    for (uint8_t i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
+    for (i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
     {
         eeprom_write_byte((uint8_t*)(EEP_SMC_IC_USER_MATCH_START_ADDR + (uint16_t)i*SMCID_UID_MATCH_ENTRY_LENGTH), 0xFF);
     }
@@ -161,9 +165,10 @@ uint8_t getMooltipassParameterInEeprom(uint8_t param)
 void deleteUserIdFromSMCUIDLUT(uint8_t userid)
 {
     uint16_t temp_address;
+    uint8_t i;
     
     // Browse through the LUT entries
-    for (uint8_t i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
+    for (i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
     {
         temp_address = EEP_SMC_IC_USER_MATCH_START_ADDR + (uint16_t)i*SMCID_UID_MATCH_ENTRY_LENGTH;
         
@@ -234,7 +239,9 @@ RET_TYPE findAvailableUserId(uint8_t* userid, uint8_t* nb_users_free)
 */
 RET_TYPE findSmcUidLUTEmptySlot(uint16_t* found_address)
 {
-    for (uint8_t i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
+	uint8_t i;
+
+    for (i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
     {
         // Store current address
         *found_address = EEP_SMC_IC_USER_MATCH_START_ADDR + (uint16_t)i*SMCID_UID_MATCH_ENTRY_LENGTH;
@@ -257,9 +264,10 @@ void outputLUTEntriesForGivenUser(uint8_t userID)
     uint8_t temp_buffer[SMARTCARD_CPZ_LENGTH+AES256_CTR_LENGTH];
     uint16_t current_address;
     uint8_t temp_userid;
+    uint8_t i;
     
     // Loop through the Look Up Tables entries
-    for (uint8_t i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
+    for (i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
     {
         // Current address var
         current_address = EEP_SMC_IC_USER_MATCH_START_ADDR + (uint16_t)i*SMCID_UID_MATCH_ENTRY_LENGTH;
@@ -288,9 +296,10 @@ RET_TYPE getUserIdFromSmartCardCPZ(uint8_t* buffer, uint8_t* nonce, uint8_t* use
 {
     uint8_t temp_buffer[SMARTCARD_CPZ_LENGTH];
     uint16_t current_address;
+    uint8_t i;
     
     // Loop through the Look Up Tables entries
-    for (uint8_t i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
+    for (i = 0; i < NB_MAX_SMCID_UID_MATCH_ENTRIES; i++)
     {
         // Current address var
         current_address = EEP_SMC_IC_USER_MATCH_START_ADDR + (uint16_t)i*SMCID_UID_MATCH_ENTRY_LENGTH;

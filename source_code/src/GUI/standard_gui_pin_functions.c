@@ -43,10 +43,12 @@
 */
 void guiDisplayPinOnPinEnteringScreen(uint8_t* current_pin, uint8_t selected_digit, uint8_t stringID)
 {
+	uint8_t i;
+
     #if defined(HARDWARE_OLIVIER_V1)
         (void)stringID;
         oledFillXY(88, 31, 82, 19, 0x00);
-        for (uint8_t i = 0; i < 4; i++)
+        for (i = 0; i < 4; i++)
         {
             oledSetXY(88+22*i, 25);
             if (i != selected_digit)
@@ -74,7 +76,7 @@ void guiDisplayPinOnPinEnteringScreen(uint8_t* current_pin, uint8_t selected_dig
         miniOledPreventTextWritingYIncrement();
         miniOledResetMaxTextY();
         oledSetFont(FONT_PROFONT_14);
-        for (uint8_t i = 0; i < 4; i++)
+        for (i = 0; i < 4; i++)
         {
             oledSetXY(64+17*i, 6);
             if (i != selected_digit)

@@ -46,6 +46,8 @@
 */
 void guiDisplayPinOnPinEnteringScreen(uint8_t* current_pin, uint8_t selected_digit, uint8_t stringID)
 {
+	uint8_t i;
+
     // Display bitmap
     miniOledBitmapDrawFlash(0, 0, selected_digit+BITMAP_PIN_SLOT1, 0);
     miniOledSetMaxTextY(62);
@@ -54,7 +56,7 @@ void guiDisplayPinOnPinEnteringScreen(uint8_t* current_pin, uint8_t selected_dig
     miniOledPreventTextWritingYIncrement();
     miniOledResetMaxTextY();
     miniOledSetFont(FONT_PROFONT_14);
-    for (uint8_t i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
         miniOledSetXY(64+17*i, 6);
         if (i != selected_digit)
@@ -97,6 +99,7 @@ RET_TYPE guiGetPinFromUser(volatile uint16_t* pin_code, uint8_t stringID)
     uint8_t selected_digit = 0;
     uint8_t finished = FALSE;
     uint8_t current_pin[4];
+    uint8_t i;
     
     // Set current pin to 0000 or random
     if (random_pin_feature_enabled == FALSE)
@@ -106,7 +109,7 @@ RET_TYPE guiGetPinFromUser(volatile uint16_t* pin_code, uint8_t stringID)
     else
     {
         fillArrayWithRandomBytes(current_pin, sizeof(current_pin));
-        for (uint8_t i = 0; i < sizeof(current_pin); i++)
+        for (i = 0; i < sizeof(current_pin); i++)
         {
             current_pin[i] &= 0x0F;
         }

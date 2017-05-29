@@ -179,11 +179,13 @@ RET_TYPE initMiniInputs(void)
 */
 RET_TYPE getNewAccelerometerDataIfAvailable(uint8_t* buffer)
 {
+	uint8_t i;
+
     if (PIN_ACC_INT & (1 << PORTID_ACC_INT))
     {
         PORT_ACC_SS &= ~(1 << PORTID_ACC_SS);
         spiUsartTransfer(0xA8);
-        for (uint8_t i = 0; i < 6; i++)
+        for (i = 0; i < 6; i++)
         {
             *buffer++ = spiUsartTransfer(0x00);
         }
@@ -383,11 +385,12 @@ RET_TYPE scanAndGetDoubleZTap(uint8_t stream_output)
 void scanMiniInputsDetect(void)
 {    
     uint8_t wheel_state, wheel_sm = 0;
+    uint8_t i;
     
     // Wheel encoder
     wheel_state = ((PIN_WHEEL_A & (1 << PORTID_WHEEL_A)) >> PORTID_WHEEL_A) | ((PIN_WHEEL_B & (1 << PORTID_WHEEL_B)) >> (PORTID_WHEEL_B-1));
     // Find the state matching the wheel state
-    for (uint8_t i = 0; i < sizeof(wheel_sm_states); i++)
+    for (i = 0; i < sizeof(wheel_sm_states); i++)
     {
         if (wheel_state == wheel_sm_states[i])
         {

@@ -177,7 +177,9 @@ static uint8_t rngGet8(void)
 */
 void fillArrayWithRandomBytes(uint8_t* buffer, uint8_t nb_bytes)
 {
-    for (uint8_t i = 0; i < nb_bytes; i++)
+	uint8_t i;
+
+    for (i = 0; i < nb_bytes; i++)
     {
         buffer[i] = rngGet8();
     }

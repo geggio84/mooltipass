@@ -162,8 +162,9 @@ void miniSetLedStates(uint8_t leds)
 {
     uint8_t portid_leds[] = {1 << PORTID_LED_1, 1 << PORTID_LED_2, 1 << PORTID_LED_3, 1 << PORTID_LED_4};
     volatile uint8_t* port_leds[] = {&PORT_LED_1, &PORT_LED_2, &PORT_LED_3, &PORT_LED_4};
+    uint8_t i;
 
-    for (uint8_t i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
         if (leds & (1 << i))
         {

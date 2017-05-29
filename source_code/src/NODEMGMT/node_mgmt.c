@@ -951,6 +951,7 @@ void populateServicesLut(void)
 */
 void getPreviousNextFirstLetterForGivenLetter(char c, char* array, uint16_t* parent_addresses)
 {
+	uint8_t i;
     // Set -s by default
     memset(array, '-', 3);
     parent_addresses[0] = NODE_ADDR_NULL;
@@ -967,7 +968,7 @@ void getPreviousNextFirstLetterForGivenLetter(char c, char* array, uint16_t* par
     }
 
     // Loop through our LUT
-    for (uint8_t i = 0; i < sizeof(currentNodeMgmtHandle.servicesLut)/sizeof(currentNodeMgmtHandle.servicesLut[0]); i++)
+    for (i = 0; i < sizeof(currentNodeMgmtHandle.servicesLut)/sizeof(currentNodeMgmtHandle.servicesLut[0]); i++)
     {
         if (currentNodeMgmtHandle.servicesLut[i] != NODE_ADDR_NULL)
         {
@@ -994,7 +995,9 @@ void getPreviousNextFirstLetterForGivenLetter(char c, char* array, uint16_t* par
 *   \param  letter      The first letter
 */
 uint16_t getParentNodeForLetter(uint8_t letter)
-{    
+{
+	int8_t i;
+
     // LUT is only for chars between 'a' and 'z'
     if ((letter >= 'a') && (letter <= 'z'))
     {
@@ -1006,7 +1009,7 @@ uint16_t getParentNodeForLetter(uint8_t letter)
         else
         {            
             // No entry, return the one before
-            for (int8_t i = letter - 'a'; i >= 0; i--)
+            for (i = letter - 'a'; i >= 0; i--)
             {
                 if (currentNodeMgmtHandle.servicesLut[(uint8_t)i] != NODE_ADDR_NULL)
                 {
@@ -1095,12 +1098,13 @@ void deleteCurrentUserFromFlash(void)
     uint16_t temp_address;
     pNode temp_pnode;
     cNode temp_cnode;
+    uint8_t i;
     
     // Delete user profile memory
     formatUserProfileMemory(currentNodeMgmtHandle.currentUserId);
     
     // Then browse through all the credentials to delete them
-    for (uint8_t i = 0; i < 2; i++)
+    for (i = 0; i < 2; i++)
     {
         while (next_parent_addr != NODE_ADDR_NULL)
         {

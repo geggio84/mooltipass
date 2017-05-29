@@ -305,6 +305,7 @@ void miniOledFlushBufferContents(uint8_t xstart, uint8_t xend, uint8_t ystart, u
     // Compute page start & page end
     uint8_t page_start = ystart >> SSD1305_PAGE_HEIGHT_BIT_SHIFT;
     uint8_t page_end = yend >> SSD1305_PAGE_HEIGHT_BIT_SHIFT;
+    uint8_t page, x;
     
     // Set the correct display window
     miniOledSetWindow(xstart, xend, page_start, page_end);
@@ -313,10 +314,10 @@ void miniOledFlushBufferContents(uint8_t xstart, uint8_t xend, uint8_t ystart, u
     spiUsartDummyWrite();
     PORT_OLED_SS &= ~(1 << PORTID_OLED_SS);
     PORT_OLED_DnC |= (1 << PORTID_OLED_DnC);
-    for (uint8_t page = page_start; page <= page_end; page++)
+    for (page = page_start; page <= page_end; page++)
     {
         uint16_t buffer_shift = ((uint16_t)page) << SSD1305_WIDTH_BIT_SHIFT;
-        for (uint8_t x = xstart; x <= xend; x++)
+        for (x = xstart; x <= xend; x++)
         {
             spiUsartSendTransfer(miniOledFrameBuffer[buffer_shift + x]);
         }
@@ -330,7 +331,9 @@ void miniOledFlushBufferContents(uint8_t xstart, uint8_t xend, uint8_t ystart, u
  */
 void miniInvertBufferAndFlushIt(void)
 {
-    for (uint16_t i = 0; i < sizeof(miniOledFrameBuffer); i++)
+	uint16_t i;
+
+    for (i = 0; i < sizeof(miniOledFrameBuffer); i++)
     {
         miniOledFrameBuffer[i] = ~miniOledFrameBuffer[i];
     }
@@ -349,10 +352,11 @@ void miniOledFlushEntireBufferToDisplay(void)
     // Display window: starting & ending page
     uint8_t current_page = miniOledScreenYOffset >> SSD1305_PAGE_HEIGHT_BIT_SHIFT;
     uint8_t set_page_command[3] = {SSD1305_CMD_SET_PAGE_ADDR, current_page, current_page};
+    uint8_t i;
       
     // Unfortunately the SSD1305 controller doesn't accept a starting page bigger than the ending page, so we need to send page by page
     uint16_t offset = (((miniOledBufferYOffset + 7) % SSD1305_OLED_BUFFER_HEIGHT) >> SSD1305_PAGE_HEIGHT_BIT_SHIFT) << SSD1305_WIDTH_BIT_SHIFT;
-    for (uint8_t i = 0; i < SSD1305_SCREEN_PAGE_HEIGHT; i++)
+    for (i = 0; i < SSD1305_SCREEN_PAGE_HEIGHT; i++)
     {
         // Set window
         miniOledWriteCommand(set_x_window_command, sizeof(set_x_window_command));
@@ -407,9 +411,10 @@ void miniOledInit(void)
 {
     uint8_t dataBuffer[10];
     uint8_t dataSize, i;
+    uint8_t ind;
     
     // Parse initialization sequence
-    for (uint8_t ind=0; ind<sizeof(mini_oled_init);) 
+    for (ind=0; ind<sizeof(mini_oled_init);)
     {
         i = 0;
         dataSize = pgm_read_byte(&mini_oled_init[ind++]);
@@ -515,6 +520,7 @@ void miniOledDrawRectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, 
     // Compute page start & page end
     uint8_t page_start = (miniOledBufferYOffset + y) >> SSD1305_PAGE_HEIGHT_BIT_SHIFT;
     uint8_t page_end = (miniOledBufferYOffset + y + height - 1) >> SSD1305_PAGE_HEIGHT_BIT_SHIFT;
+    uint8_t page, xpos;
     
     // Compute mask settings
     uint8_t f_bitshift_mask[] = {0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF};
@@ -522,10 +528,10 @@ void miniOledDrawRectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, 
     uint8_t l_bitshift_mask[] = {0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE0, 0xC0, 0x80};
     uint8_t l_bitshift = y & 0x07;
     
-    for(uint8_t page = page_start; page <= page_end; page++)
+    for(page = page_start; page <= page_end; page++)
     {
         uint16_t buffer_shift = (((uint16_t)page) % SSD1305_OLED_BUFFER_PAGE_HEIGHT) << SSD1305_WIDTH_BIT_SHIFT;
-        for(uint8_t xpos = x; xpos < x + width; xpos++)
+        for(xpos = x; xpos < x + width; xpos++)
         {
             uint8_t or_mask = 0xFF;
             uint8_t and_mask = 0x00;
@@ -587,12 +593,14 @@ void miniOledClearFrameBuffer(void)
  */
 void miniOledDumpCurrentFont(void)
 {
+	uint8_t i, j;
+
     miniOledTextWritingYIncrement = TRUE;
     
     char temp_string[34];
-    for(uint8_t i = 0; i < (256/32); i++)
+    for(i = 0; i < (256/32); i++)
     {
-        for(uint8_t j = 0; j < 32; j++)
+        for(j = 0; j < 32; j++)
         {
             temp_string[j+1] = i*32+j;
         }
@@ -674,6 +682,7 @@ void miniOledBitmapDrawRaw(int8_t x, uint8_t y, bitstream_mini_t* bs)
     uint8_t cur_pixels = 0, prev_pixels = 0;
     uint8_t end_x = x + bs->width - 1;
     uint8_t start_x;
+    int8_t page, xx;
 
     // Check if x is < 0
     if (x < 0)
@@ -705,11 +714,11 @@ void miniOledBitmapDrawRaw(int8_t x, uint8_t y, bitstream_mini_t* bs)
     uint8_t rbitmask[] = {0x00, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE};
     //uint8_t lbitmask[] = {0xFF, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F};
     
-    for (uint8_t x = start_x; (x <= end_x) && (x < SSD1305_OLED_WIDTH); x++)
+    for (xx = start_x; (xx <= end_x) && (xx < SSD1305_OLED_WIDTH); xx++)
     {
         int16_t buffer_shift = (((uint16_t)end_page % SSD1305_OLED_BUFFER_PAGE_HEIGHT) << SSD1305_WIDTH_BIT_SHIFT);
         uint8_t pixels_to_be_displayed = bs->height;
-        for (int8_t page = end_page; page >= start_page; page--)
+        for (page = end_page; page >= start_page; page--)
         {                     
             if (page == end_page)
             {
@@ -915,7 +924,9 @@ uint8_t miniOledGlyphWidth(char ch)
 uint16_t miniOledStrWidth(const char* str)
 {
     uint16_t width=0;
-    for (uint8_t ind=0; (str[ind] != 0) && (str[ind] != '\r'); ind++) 
+    uint8_t ind;
+
+    for (ind=0; (str[ind] != 0) && (str[ind] != '\r'); ind++)
     {
         width += miniOledGlyphWidth(str[ind]);
     }
@@ -1238,6 +1249,7 @@ void miniOledResetMaxTextY(void)
 void miniOledCheckFlashStringsWidth(void)
 {
     char temp_string[4];
+    uint8_t i;
     
     // Clear screen, write wrong IDs on the screen
     miniOledTextCurX = 0;
@@ -1246,7 +1258,7 @@ void miniOledCheckFlashStringsWidth(void)
     miniOledClearFrameBuffer();
     
     miniOledPutstr("> 113px: ");
-    for (uint8_t i = ID_FIRST_STRING; i <= ID_LAST_STRING; i++)
+    for (i = ID_FIRST_STRING; i <= ID_LAST_STRING; i++)
     {
         if (miniOledStrWidth(readStoredStringToBuffer(i)) > (SSD1305_OLED_WIDTH-15))
         {
@@ -1258,7 +1270,7 @@ void miniOledCheckFlashStringsWidth(void)
     miniOledTextCurX = 0;
     miniOledTextCurY += 10;
     miniOledPutstr("> 128px: ");
-    for (uint8_t i = ID_FIRST_STRING; i <= ID_LAST_STRING; i++)
+    for (i = ID_FIRST_STRING; i <= ID_LAST_STRING; i++)
     {
         if (miniOledStrWidth(readStoredStringToBuffer(i)) > (SSD1305_OLED_WIDTH))
         {

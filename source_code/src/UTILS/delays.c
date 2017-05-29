@@ -37,5 +37,7 @@ void userViewDelay(void)
 */
 void smallForLoopBasedDelay(void)
 {
-    for (uint16_t i = 0; i < 20000; i++) asm volatile ("NOP");
+	uint16_t i;
+
+    for (i = 0; i < 20000; i++) asm volatile ("NOP");
 }

@@ -81,7 +81,9 @@ void displayCredentialAtSlot(uint8_t slot, char* text, uint8_t truncate_index)
 #ifdef MINI_VERSION
 void miniIncrementScrolledTexts(void)
 {
-    for (uint8_t i = 0; i < sizeof(string_extra_chars); i++)
+	uint8_t i;
+
+    for (i = 0; i < sizeof(string_extra_chars); i++)
     {
         if (string_extra_chars[i] > 0)
         {

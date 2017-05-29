@@ -1013,7 +1013,8 @@ void usbProcessIncoming(uint8_t caller_id)
                         
                         // Compare the result with the provided password
                         uint8_t compare_result = 0x00;
-                        for (uint8_t i = 0; i < sizeof(password_buffer); i++)
+                        uint8_t i;
+                        for (i = 0; i < sizeof(password_buffer); i++)
                         {
                             compare_result |= password_buffer[i] ^ msg->body.data[i];
                         }

@@ -123,6 +123,8 @@ RET_TYPE electricalJumpToBootloaderCondition(void)
  */
 void mooltipassStandardElectricalTest(uint8_t fuse_ok)
 {
+	uint8_t i;
+
     // Check if PB5 is low to start electrical test
     DDRB &= ~(1 << 5); PORTB |= (1 << 5);
     smallForLoopBasedDelay();
@@ -139,7 +141,7 @@ void mooltipassStandardElectricalTest(uint8_t fuse_ok)
         DDRD |= 0xFF; PORTD |= 0xFF;
         
         // All other pins are input by default, run our test
-        for (uint8_t i = 0; i < 4; i++)
+        for (i = 0; i < 4; i++)
         {
             PORTD |= 0xFF;
             smallForLoopBasedDelay();
@@ -185,6 +187,7 @@ void mooltipassMiniFunctionalTest(uint8_t flash_init_result, uint8_t mini_inputs
     RET_TYPE temp_rettype;
     char temp_string[3];
     uint8_t temp_uint;
+    uint8_t i;
         
     // Wait for USB host to upload bundle, which then sets USER_PARAM_INIT_KEY_PARAM
     while(getMooltipassParameterInEeprom(USER_PARAM_INIT_KEY_PARAM) != correct_param_init_key_val)
@@ -201,7 +204,7 @@ void mooltipassMiniFunctionalTest(uint8_t flash_init_result, uint8_t mini_inputs
     #ifdef LEDS_ENABLED_MINI
     setPwmDc(0xFFFF);
     correct_param_init_key_val++;
-    for (uint8_t i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
         // Display current LED
         guiDisplayRawString(ID_STRING_LED1+i);

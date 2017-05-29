@@ -114,8 +114,9 @@ static void boot_program_page(uint16_t page, uint8_t* buf)
 uint8_t sideChannelSafeMemCmp(uint8_t* dataA, uint8_t* dataB, uint8_t size)
 {
     volatile uint8_t return_value = 0x00;
+    uint8_t i;
 
-    for (uint8_t i = 0; i < size; i++)
+    for (i = 0; i < size; i++)
     {
         return_value |= dataA[i] ^ dataB[i];
     }
@@ -143,6 +144,8 @@ int main(void)
     uint8_t new_version_number[4];                                                                                      // New firmware version identifier
     uint16_t firmware_start_address = UINT16_MAX - MAX_FIRMWARE_SIZE - sizeof(cur_cbc_mac) - sizeof(cur_aes_key) + 1;   // Start address of firmware in external memory
     uint16_t firmware_end_address = UINT16_MAX - sizeof(cur_cbc_mac) - sizeof(cur_aes_key) + 1;                         // End address of firmware in external memory
+    uint16_t i;
+    uint8_t pass_number;
 
 
     /* The firmware uses the watchdog timer to get here */
@@ -184,7 +187,7 @@ int main(void)
     PORT_ACC_SS |= (1 << PORTID_ACC_SS);                        // Setup PORT for the Accelerometer SS    
     DDR_OLED_SS |= (1 << PORTID_OLED_SS);                       // Setup PORT for the OLED SS
     PORT_OLED_SS |= (1 << PORTID_OLED_SS);                      // Setup PORT for the OLED SS
-    for (uint16_t i = 0; i < 20000; i++) asm volatile ("NOP");  // Wait for 3.3V to come up
+    for (i = 0; i < 20000; i++) asm volatile ("NOP");  // Wait for 3.3V to come up
 
     /* Disable I2C block of the Accelerometer */
     PORT_ACC_SS &= ~(1 << PORTID_ACC_SS);
@@ -203,7 +206,7 @@ int main(void)
     eeprom_write_word((uint16_t*)EEP_BOOTKEY_ADDR, BRICKED_BOOTKEY);
 
     /* Update bundle composition: bundle | padding | firmware version | new aes key bool | firmware | padding | new aes key encoded | cbcmac */
-    for (uint8_t pass_number = 0; pass_number < 2; pass_number++)
+    for (pass_number = 0; pass_number < 2; pass_number++)
     {
         /* Init CBCMAC encryption context and read current firmware version ID */
         memcpy_PF(old_version_number, (uint_farptr_t)0x6FFC, sizeof(old_version_number));                               // Read old version number from flash
@@ -213,7 +216,7 @@ int main(void)
         aes_key_update_bool = FALSE;                                                                                    // Set to False
 
         // Compute CBCMAC for between the start of the graphics zone until the max addressing space (65536) - the size of the CBCMAC
-        for (uint16_t i = GRAPHIC_ZONE_START; i < (UINT16_MAX - sizeof(cur_cbc_mac) + 1); i += sizeof(cur_cbc_mac))
+        for (i = GRAPHIC_ZONE_START; i < (UINT16_MAX - sizeof(cur_cbc_mac) + 1); i += sizeof(cur_cbc_mac))
         {
             // Read data from external flash
             flashRawRead(temp_data, i, sizeof(temp_data));

@@ -356,9 +356,10 @@ int main(void)
     {
         #if defined(HARDWARE_OLIVIER_V1)
             uint8_t tut_led_mask, press_filter;
+            uint8_t i;
             activateGuardKey();
             activityDetectedRoutine();
-            for (uint8_t i = 0; i < sizeof(tutorial_masks)/2; i++)
+            for (i = 0; i < sizeof(tutorial_masks)/2; i++)
             {
                 tut_led_mask = pgm_read_byte(&tutorial_masks[i*2]);
                 press_filter = pgm_read_byte(&tutorial_masks[i*2+1]);
@@ -408,8 +409,9 @@ int main(void)
     /* LED fade-in for standard version & mini v2/3 */
     #if defined(HARDWARE_OLIVIER_V1)
         /* Let's fade in the LEDs */
+    uint16_t i;
         touchDetectionRoutine(0);
-        for (uint16_t i = 0; i < MAX_PWM_VAL; i++)
+        for (i = 0; i < MAX_PWM_VAL; i++)
         {
             setPwmDc(i);
             timerBasedDelayMs(0);

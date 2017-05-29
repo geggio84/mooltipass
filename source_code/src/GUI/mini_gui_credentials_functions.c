@@ -50,7 +50,9 @@ uint8_t string_extra_chars[3];
 */
 void miniIncrementScrolledTexts(void)
 {
-    for (uint8_t i = 0; i < sizeof(string_extra_chars); i++)
+	uint8_t i;
+
+    for (i = 0; i < sizeof(string_extra_chars); i++)
     {
         if (string_extra_chars[i] > 0)
         {

@@ -144,6 +144,8 @@ void guiGetBackToCurrentScreen(void)
 */
 void guiScreenLoop(uint8_t input_interface_result)
 {
+	uint8_t i;
+
     #if defined(MINI_VERSION)
         // If no press, you can return!
         if ((input_interface_result == WHEEL_ACTION_NONE) || (currentScreen == SCREEN_DEFAULT_INSERTED_INVALID) || (currentScreen == SCREEN_DEFAULT_INSERTED_UNKNOWN))
@@ -192,7 +194,7 @@ void guiScreenLoop(uint8_t input_interface_result)
                     currentScreen--;
                 }
                 // We can do that because of defines and bitmap order (see logic_fw_flash_storage and gui.h)
-                for (uint8_t i = 0; i < NB_BMPS_PER_TRANSITION; i++)
+                for (i = 0; i < NB_BMPS_PER_TRANSITION; i++)
                 {
                     oledBitmapDrawFlash(0, 0, (currentScreen-SCREEN_LOCK)*NB_BMPS_PER_TRANSITION+BITMAP_MAIN_LOCK+NB_BMPS_PER_TRANSITION-1-i, OLED_SCROLL_FLIP);
                     timerBasedDelayMs(12);
@@ -201,7 +203,7 @@ void guiScreenLoop(uint8_t input_interface_result)
             else if (input_interface_result == WHEEL_ACTION_DOWN)
             {
                 // We can do that because of defines and bitmap order (see logic_fw_flash_storage and gui.h)
-                for (uint8_t i = 0; i < NB_BMPS_PER_TRANSITION-1; i++)
+                for (i = 0; i < NB_BMPS_PER_TRANSITION-1; i++)
                 {
                     oledBitmapDrawFlash(0, 0, (currentScreen-SCREEN_LOCK)*NB_BMPS_PER_TRANSITION+BITMAP_MAIN_LOCK+1+i, OLED_SCROLL_FLIP);
                     timerBasedDelayMs(12);
@@ -786,6 +788,7 @@ void guiDisplayGoingToSleep(void)
 RET_TYPE guiAskForConfirmation(uint8_t nb_args, confirmationText_t* text_object)
 {    
     uint8_t flash_flag = FALSE;
+    uint8_t i;
 
     // LED animation
     #ifdef LEDS_ENABLED_MINI
@@ -865,7 +868,7 @@ RET_TYPE guiAskForConfirmation(uint8_t nb_args, confirmationText_t* text_object)
         // For loop to display lines when there is more than one arg
         if (nb_args > 1)
         {
-            for (uint8_t i = 0; i < nb_args; i++)
+            for (i = 0; i < nb_args; i++)
             {
                 string_extra_chars[i] = strlen(text_object->lines[i]) - miniOledPutCenteredString(string_y_indexes[i], text_object->lines[i]);
             }
@@ -968,7 +971,7 @@ RET_TYPE guiAskForConfirmation(uint8_t nb_args, confirmationText_t* text_object)
                     oledBitmapDrawFlash(SSD1305_OLED_WIDTH-15, 0, BITMAP_APPROVE, 0);
                 }
 
-                for (uint8_t i = 0; i < nb_args; i++)
+                for (i = 0; i < nb_args; i++)
                 {
                     if (string_extra_chars[i] > 0)
                     {

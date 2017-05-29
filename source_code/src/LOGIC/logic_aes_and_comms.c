@@ -138,8 +138,10 @@ void clearSmartCardInsertedUnlocked(void)
 */
 void eraseFlashUsersContents(void)
 {
+	uint8_t i;
+
     sectorZeroErase(FLASH_SECTOR_ZERO_A_CODE);
-    for (uint8_t i = SECTOR_START; i <= SECTOR_END; i++)
+    for (i = SECTOR_START; i <= SECTOR_END; i++)
     {
         sectorErase(i);
     }
@@ -343,6 +345,7 @@ void computeAndDisplayBlockSizeEncryptionResult(uint8_t* aes_key, uint8_t* data,
 {
     // Buffer to store a copy of the data to encrypt
     uint8_t data_copy[AES_BLOCK_SIZE/8];
+    uint8_t i;
 
     // Get the text to display on the screen
     miniOledClearFrameBuffer();
@@ -353,7 +356,7 @@ void computeAndDisplayBlockSizeEncryptionResult(uint8_t* aes_key, uint8_t* data,
     encryptOneAesBlockWithKeyEcb(aes_key, data_copy);
 
     // Format and display hash
-    for (uint8_t i = 0; i < AES256_CTR_LENGTH / 2; i++)
+    for (i = 0; i < AES256_CTR_LENGTH / 2; i++)
     {
         hexachar_to_string((char)data_copy[i], (char*)&textBuffer1[i*2]);
         hexachar_to_string((char)data_copy[i+(AES_BLOCK_SIZE/8/2)], (char*)&textBuffer2[i*2]);
@@ -1571,6 +1574,7 @@ RET_TYPE generateRandomPassword(uint8_t *password, uint8_t length, uint16_t flag
     uint8_t charset_final_size = 0;
     char * current_charset; /* temporary pointer to charset loaded from external flash */
     char cs[96];            /* final charset, null-terminated */
+    uint8_t i;
 
     /* exit if inconsistent length */
     if(length > (NODE_CHILD_SIZE_OF_PASSWORD - 1))
@@ -1585,7 +1589,7 @@ RET_TYPE generateRandomPassword(uint8_t *password, uint8_t length, uint16_t flag
     }
 
     /* calculate allowed charset size from bitfield */
-    for (uint8_t i = 0; i < 8; ++i)
+    for (i = 0; i < 8; ++i)
     {
         if((charsetflags & (1 << i)) > 0)
         {
@@ -1611,7 +1615,7 @@ RET_TYPE generateRandomPassword(uint8_t *password, uint8_t length, uint16_t flag
     password[NODE_CHILD_SIZE_OF_PASSWORD-1] = 0;
 
     /* use each random number as a character index to pick from the allowed charset */
-    for (uint8_t i = 0; i < NODE_CHILD_SIZE_OF_PASSWORD; ++i)
+    for (i = 0; i < NODE_CHILD_SIZE_OF_PASSWORD; ++i)
     {
         /* truncate after desired length, but keep random data as padding */
         if(i >= length)

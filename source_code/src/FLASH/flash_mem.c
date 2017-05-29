@@ -74,11 +74,13 @@ static inline void fillPageReadWriteEraseOpcodeFromAddress(uint16_t pageNumber, 
 */
 void sendDataToFlashWithFourBytesOpcode(uint8_t* opcode, uint8_t* buffer, uint16_t buffer_size)
 {
+	uint8_t i;
+
     /* Assert chip select */
     PORT_FLASH_nS &= ~(1 << PORTID_FLASH_nS);
 
     // Send opcode
-    for (uint8_t i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
         *opcode = spiUsartTransfer(*opcode);
         opcode++;
@@ -282,11 +284,13 @@ void pageErase(uint16_t pageNumber)
  * @note    Sets all bits in spi flash memory to Logic 1 (High)
  */
 void formatFlash(void) 
-{    
+{
+	uint8_t i;
+
     sectorZeroErase(FLASH_SECTOR_ZERO_A_CODE); // erase sector 0a
     sectorZeroErase(FLASH_SECTOR_ZERO_B_CODE); // erase sector 0b
     
-    for(uint8_t i = SECTOR_START; i <= SECTOR_END; i++)
+    for(i = SECTOR_START; i <= SECTOR_END; i++)
     {
         sectorErase(i);
     }
