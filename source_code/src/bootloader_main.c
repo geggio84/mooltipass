@@ -75,7 +75,11 @@ static void boot_program_page(uint16_t page, uint8_t* buf)
         return;
     }
 
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
     {
         // Erase page, wait for memories to be ready
         boot_page_erase(page);
@@ -95,6 +99,9 @@ static void boot_program_page(uint16_t page, uint8_t* buf)
         boot_spm_busy_wait();
         boot_rww_enable();
     }
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
 }
 
 /*! \fn     sideChannelSafeMemCmp(uint8_t* dataA, uint8_t* dataB, uint8_t size)

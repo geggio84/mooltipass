@@ -55,7 +55,11 @@ void miniLedsSetAnimation(uint8_t animation)
     // Apply animation mask in case user doesn't want this particular one
     animation &= getMooltipassParameterInEeprom(MINI_LED_ANIM_MASK_PARAM);
 
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
     {
         // Reset global vars
         led_animation_var1 = 0;
@@ -76,6 +80,9 @@ void miniLedsSetAnimation(uint8_t animation)
             miniSetLedStates(led_animation_var2);
         }
     }
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
 }
 
 /*! \fn     miniLedsAnimationTick(void)

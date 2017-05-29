@@ -104,10 +104,17 @@ uint8_t getSmartCardInsertedUnlocked(void)
 */
 void setSmartCardInsertedUnlocked(void)
 {
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+	__disable_interrupt();
+#else
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
     {
         smartcard_inserted_unlocked = TRUE;
     }
+#if defined(MINI_MSP430)
+	__enable_interrupt();
+#endif
 }
 
 /*! \fn     clearSmartCardInsertedUnlocked(void)

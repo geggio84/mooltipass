@@ -91,7 +91,11 @@ void activateTimer(uint8_t uid, uint16_t val)
     // Compare is done in one cycle
     if (context_timers[uid].timer_val != val)
     {
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
         ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
         {
             context_timers[uid].timer_val = val;
             if (val == 0)
@@ -103,6 +107,9 @@ void activateTimer(uint8_t uid, uint16_t val)
                 context_timers[uid].flag = TIMER_RUNNING;
             }
         }
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
     }
 }
 

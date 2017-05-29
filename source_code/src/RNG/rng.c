@@ -109,13 +109,20 @@ void rngInit(void)
     TCCR0A = 0x00;
     TCCR0B = 0x01;    
 
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
     {
         // Enable 16ms interrupt
         wdt_clear_flag();
         wdt_change_enable();
         wdt_enable_16ms_int();
-    }    
+    }
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
 }
 
 /*! \fn static uint32_t rngGet32(void)
@@ -130,12 +137,19 @@ static uint32_t rngGet32(void)
     while (rng_buffer_count < 1);
 
     // Critical region here
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
     {
         retVal = rng_buffer[rng_buffer_last_valid_value];
         rng_buffer_last_valid_value = (rng_buffer_last_valid_value + 1) % RNG_BUFFER_SIZE;
         --rng_buffer_count;
     }
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
     rngValue.pendingBytes = 0;
     
     return(retVal);

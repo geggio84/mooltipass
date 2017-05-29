@@ -241,7 +241,11 @@ RET_TYPE isCardPlugged(void)
 
     if ((return_val != RETURN_DET) && (return_val != RETURN_REL))
     {
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
         ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
         {
             if (button_return == RETURN_JDETECT)
             {
@@ -252,6 +256,9 @@ RET_TYPE isCardPlugged(void)
                 button_return = RETURN_REL;
             }
         }
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
     }
 
     return return_val;

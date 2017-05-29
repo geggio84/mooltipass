@@ -61,10 +61,17 @@ uint32_t millis()
 {
     uint32_t ms;
     
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
     {
         ms = msecTicks;
     }
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
 
     return ms;
 }

@@ -475,12 +475,18 @@ int8_t getWheelCurrentIncrement(void)
     if (wheel_cur_increment != 0)
     {
         activityDetectedRoutine();
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
         ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
         {
             return_val = wheel_cur_increment;
             wheel_cur_increment = 0;
         }
-        
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
     }
     
     return return_val;
@@ -501,7 +507,11 @@ RET_TYPE isWheelClicked(void)
         if ((return_val != RETURN_DET) && (return_val != RETURN_REL))
         {
             activityDetectedRoutine();
+#if defined(MINI_MSP430)
+            __disable_interrupt();
+#else
             ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
             {
                 if (wheel_click_return == RETURN_JDETECT)
                 {
@@ -512,6 +522,9 @@ RET_TYPE isWheelClicked(void)
                     wheel_click_return = RETURN_REL;
                 }
             }
+#if defined(MINI_MSP430)
+            __enable_interrupt();
+#endif
         }
 
         return return_val;
@@ -523,7 +536,11 @@ RET_TYPE isWheelClicked(void)
 */
 void miniWheelClearDetections(void)
 {
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+		__disable_interrupt();
+#else
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
     {
         last_detection_type_ret = WHEEL_ACTION_NONE;
         wheel_click_duration_counter = 0;
@@ -531,6 +548,9 @@ void miniWheelClearDetections(void)
         wheel_increment_armed = FALSE;
         wheel_cur_increment = 0;
     }
+#if defined(MINI_MSP430)
+		__enable_interrupt();
+#endif
 }
 
 /*! \fn     miniGetLastReturnedAction(void)
@@ -564,14 +584,25 @@ RET_TYPE miniGetWheelAction(uint8_t wait_for_action, uint8_t ignore_incdec)
         if (wheel_click_return == RETURN_JDETECT)
         {
             // When checking for actions we clear the just detected state
-            ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+        	__disable_interrupt();
+#else
+        	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
             {
                 wheel_click_return = RETURN_DET;
             }
+#if defined(MINI_MSP430)
+            __enable_interrupt();
+#endif
         }
         if ((wheel_click_return == RETURN_JRELEASED) || (wheel_cur_increment_copy != 0) || (wheel_click_duration_counter > LONG_PRESS_MS))
         {
-            ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#if defined(MINI_MSP430)
+        	__disable_interrupt();
+#else
+        	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
             {
                 if ((wheel_click_duration_counter > LONG_PRESS_MS) && (discard_release_event == FALSE))
                 {
@@ -634,6 +665,9 @@ RET_TYPE miniGetWheelAction(uint8_t wait_for_action, uint8_t ignore_incdec)
                     wheel_cur_increment = 0;
                 }                
             }
+#if defined(MINI_MSP430)
+        	__enable_interrupt();
+#endif
         }
     }
     while ((wait_for_action != FALSE) && (return_val == WHEEL_ACTION_NONE));
