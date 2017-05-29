@@ -37,7 +37,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#if !defined(__DOXYGEN__)
 /* Internal helper functions. */
 static __inline__ uint8_t __iSeiRetVal(void)
 {
@@ -70,7 +69,6 @@ static __inline__ void __iRestore(const  uint8_t *__s)
     SREG = *__s;
     __asm__ volatile ("" ::: "memory");
 }
-#endif	/* !__DOXYGEN__ */
 
 /** \file */
 /** \defgroup util_atomic <util/atomic.h> Atomically and Non-Atomically Executed Code Blocks
@@ -199,12 +197,8 @@ main(void)
     Two possible macro parameters are permitted, ATOMIC_RESTORESTATE
     and ATOMIC_FORCEON.
 */
-#if defined(__DOXYGEN__)
-#define ATOMIC_BLOCK(type)
-#else
 #define ATOMIC_BLOCK(type) for ( type, __ToDo = __iCliRetVal(); \
 	                       __ToDo ; __ToDo = 0 )
-#endif	/* __DOXYGEN__ */
 
 /** \def NONATOMIC_BLOCK(type)
     \ingroup util_atomic
@@ -220,12 +214,8 @@ main(void)
     Two possible macro parameters are permitted,
     NONATOMIC_RESTORESTATE and NONATOMIC_FORCEOFF.
 */
-#if defined(__DOXYGEN__)
-#define NONATOMIC_BLOCK(type)
-#else
 #define NONATOMIC_BLOCK(type) for ( type, __ToDo = __iSeiRetVal(); \
 	                          __ToDo ;  __ToDo = 0 )
-#endif	/* __DOXYGEN__ */
 
 /** \def ATOMIC_RESTORESTATE
     \ingroup util_atomic
@@ -238,12 +228,8 @@ main(void)
     Global Interrupt Status flag when execution of the block
     completes.
 */
-#if defined(__DOXYGEN__)
-#define ATOMIC_RESTORESTATE
-#else
 #define ATOMIC_RESTORESTATE uint8_t sreg_save \
 	__attribute__((__cleanup__(__iRestore))) = SREG
-#endif	/* __DOXYGEN__ */
 
 /** \def ATOMIC_FORCEON
     \ingroup util_atomic
@@ -259,12 +245,8 @@ main(void)
     when the side effects of enabling global interrupts at the block's
     completion are known and understood.
 */
-#if defined(__DOXYGEN__)
-#define ATOMIC_FORCEON
-#else
 #define ATOMIC_FORCEON uint8_t sreg_save \
 	__attribute__((__cleanup__(__iSeiParam))) = 0
-#endif	/* __DOXYGEN__ */
 
 /** \def NONATOMIC_RESTORESTATE
     \ingroup util_atomic
@@ -277,12 +259,8 @@ main(void)
     the state of the Global Interrupt Status flag when execution of
     the block completes.
 */
-#if defined(__DOXYGEN__)
-#define NONATOMIC_RESTORESTATE
-#else
 #define NONATOMIC_RESTORESTATE uint8_t sreg_save \
 	__attribute__((__cleanup__(__iRestore))) = SREG
-#endif	/* __DOXYGEN__ */
 
 /** \def NONATOMIC_FORCEOFF
     \ingroup util_atomic
@@ -298,11 +276,7 @@ main(void)
     or when the side effects of disabling global interrupts at the
     block's completion are known and understood.
 */
-#if defined(__DOXYGEN__)
-#define NONATOMIC_FORCEOFF
-#else
 #define NONATOMIC_FORCEOFF uint8_t sreg_save \
 	__attribute__((__cleanup__(__iCliParam))) = 0
-#endif	/* __DOXYGEN__ */
 
 #endif

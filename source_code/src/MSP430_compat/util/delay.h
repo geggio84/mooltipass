@@ -35,11 +35,9 @@
 #ifndef _UTIL_DELAY_H_
 #define _UTIL_DELAY_H_ 1
 
-#ifndef __DOXYGEN__
 #  ifndef __HAS_DELAY_CYCLES
 #    define __HAS_DELAY_CYCLES 1
 #  endif
-#endif  /* __DOXYGEN__ */
 
 #include <inttypes.h>
 #include <util/delay_basic.h>
@@ -82,10 +80,8 @@
 
 */
 
-#if !defined(__DOXYGEN__)
 static __inline__ void _delay_us(double __us) __attribute__((__always_inline__));
 static __inline__ void _delay_ms(double __ms) __attribute__((__always_inline__));
-#endif
 
 #ifndef F_CPU
 /* prevent compiler error by supplying a default */
