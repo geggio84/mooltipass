@@ -75,7 +75,7 @@
     consider using the macros from <util/atomic.h>, rather than
     implementing them manually with cli() and sei().
 */
-# define sei()  __asm__ __volatile__ ("sei" ::: "memory")
+# define sei()  __enable_interrupt()
 
 /** \def cli()
     \ingroup avr_interrupts
@@ -89,7 +89,7 @@
     consider using the macros from <util/atomic.h>, rather than
     implementing them manually with cli() and sei().
 */
-# define cli()  __asm__ __volatile__ ("cli" ::: "memory")
+# define cli()  __disable_interrupt()
 
 /** \name Macros for writing interrupt handler functions */
 
